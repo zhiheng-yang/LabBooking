@@ -17,8 +17,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        textView = findViewById(R.id.text);
-        Intent intent=new Intent(MainActivity.this, Booking.class); startActivity(intent);
+//        textView = findViewById(R.id.text);
+        Intent intent=new Intent(MainActivity.this, ChooseLab.class); startActivity(intent);
         // 获得所有预约信息/获得某一个用户的所有预约信息
         String appointmentJson = "{\n" +
                 "    \"state\": 200,\n" +

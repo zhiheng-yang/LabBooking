@@ -1,4 +1,4 @@
-package com.example.labbooking.util;
+package com.example.labbooking.test_util;
 
 import java.io.BufferedReader;
 import java.io.IOException;

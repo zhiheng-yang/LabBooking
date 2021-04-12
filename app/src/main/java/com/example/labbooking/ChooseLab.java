@@ -25,7 +25,6 @@ import java.util.List;
 
 public class ChooseLab extends AppCompatActivity {
 
-    // 直接改，省事儿，其实只用到了一维，二维多余
     private Button[] cells;
     private Button back;
     private LinearLayout table_layout;
@@ -52,8 +51,7 @@ public class ChooseLab extends AppCompatActivity {
     }
 
 
-    public String getAppointmentData(String url){
-
+    public void getAppointmentData(String url){
         StringRequest stringRequest = new StringRequest(url,
                 new Response.Listener<String>() {
                     @Override
@@ -77,7 +75,7 @@ public class ChooseLab extends AppCompatActivity {
         });
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         requestQueue.add(stringRequest);
-        return null;
+//        return null;
     }
 
 

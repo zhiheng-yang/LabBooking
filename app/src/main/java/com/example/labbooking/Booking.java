@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSONArray;
 import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -35,15 +36,14 @@ import java.util.Map;
 
 public class Booking extends AppCompatActivity {
 
-    public static int CHOSEN_MONTH = 0;
+    public static int CHOSEN_MONTH;
     public int counter = 0;
-    private String lab; // 预约的哪个实验室，通过Intent传递
+    private static String lab; // 预约的哪个实验室，通过Intent传递
     private int year_now = new Date().getYear();
     private int month_now = new Date().getMonth()+1;
     private int day_now = new Date().getDay();
     private String test_data;
 //    private RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-
 
     private int tableCol = Booking.getMaxDay(year_now, CHOSEN_MONTH==0?month_now:CHOSEN_MONTH)+1;
     private int tableRow = 6;
@@ -55,7 +55,6 @@ public class Booking extends AppCompatActivity {
     public final String[] row = {
             "",
             "1-2","3-5","6-7","8-9","10-12"};
-
 
 
     private Button[][] cells = new Button[tableRow][tableCol];
@@ -79,7 +78,8 @@ public class Booking extends AppCompatActivity {
         initCol();
         main = (LinearLayout)this.findViewById(R.id.main);
         final Bundle bundle=getIntent().getExtras();
-
+        Intent getIntent = getIntent();
+        lab = getIntent.getStringExtra("lab");
 
 
         // 下拉表-------------------------------------------------------------------------
@@ -105,6 +105,9 @@ public class Booking extends AppCompatActivity {
                 CHOSEN_MONTH=Integer.parseInt(month_int);
                 if(++counter>1) {
                     Intent intent = new Intent(Booking.this, Booking.class);
+                    Bundle bundle=new Bundle();
+                    bundle.putString("lab",lab);//传递一个名为name值为"Demo"的string类型数据
+                    intent.putExtras(bundle);//传递过去
                     startActivity(intent);
                 }
 //                Toast.makeText(Booking.this, month_int, Toast.LENGTH_SHORT).show();
@@ -139,7 +142,12 @@ public class Booking extends AppCompatActivity {
                         @Override
                         public void onClick(View v) {
                             Toast.makeText(Booking.this, each_button.getTag()+"被点击", Toast.LENGTH_SHORT).show();
-//                            book(each_button.getTag().toString());
+//                            int user_id, int lab_id, String date, String remark, int kalendar_id
+                            String[] date_ymd = each_button.getTag().toString().split("-");
+                            int year_split = Integer.parseInt(date_ymd[0])+1900;
+                            Toast.makeText(Booking.this, lab, Toast.LENGTH_SHORT).show();
+
+                            volleypost(1, Integer.parseInt(lab), year_split+"-"+date_ymd[1]+"-"+date_ymd[2], "test", 1);
                         }
                     });
                 }else if (i==0){
@@ -246,6 +254,43 @@ public class Booking extends AppCompatActivity {
         }
     }
 
+    //volley发送post请求
+    private void volleypost(int user_id, int lab_id, String date, String remark, int kalendar_id) {
+        final int user_id2 = user_id;
+        final int lab_id2 = lab_id;
+        final String date2 = date;
+        final String remark2 = remark;
+        final int kalendar_id2 = kalendar_id;
+        String url = "http://49.234.112.12:8081/appointment/addAppointment?";
+        StringRequest request = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String s) {
 
+                Log.i("aa", "post请求成功" + s);
+                Toast.makeText(Booking.this, "000000000000000000"+s, Toast.LENGTH_LONG).show();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                Log.i("aa", "post请求失败" + volleyError.toString());
+                Toast.makeText(Booking.this, "111111"+volleyError.toString(), Toast.LENGTH_LONG).show();
+                }
+            })
+        {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                HashMap<String, String> map = new HashMap<>();
+                map.put("user_id", user_id2+"");
+                map.put("lab_id", lab_id2+"");
+                map.put("date", date2);
+                map.put("remark", remark2);
+                map.put("kalendar_id", kalendar_id2+"");
+                return map;
+            }
+        };
+        request.setTag("volleypost");
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        requestQueue.add(request);
+    }
 
 }

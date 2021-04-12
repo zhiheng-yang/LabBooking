@@ -82,7 +82,8 @@ public class ChooseLab extends AppCompatActivity {
     public void initTableByAppointment(String jsonArrayStr){
         com.alibaba.fastjson.JSONObject object
                 = com.alibaba.fastjson.JSONObject.parseObject(jsonArrayStr);
-        List<Lab> labs =  JSONArray.parseArray(object.getString("data"), Lab.class);
+        List<Lab> labs = JSONArray.parseArray(object.getString("data"), Lab.class);
+
         cells = new Button[labs.size()];
         for (int i = 0; i < cells.length; i++) {
             LinearLayout each_row_linearOut = new LinearLayout(ChooseLab.this);

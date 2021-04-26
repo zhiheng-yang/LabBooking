@@ -136,7 +136,7 @@ public class Booking extends AppCompatActivity {
                 each_button.setEnabled(true);
                 each_button.setHeight(200);
                 each_button.setTag(year_now+"-"+(CHOSEN_MONTH==0?month_now:CHOSEN_MONTH)+"-"+j+"-"+row[i]); // tag信息待定
-
+                each_button.setTag(R.id.kalender_tag, i);
                 if (i!=0 && j!=0) {
                     each_button.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -147,7 +147,7 @@ public class Booking extends AppCompatActivity {
                             int year_split = Integer.parseInt(date_ymd[0])+1900;
                             Toast.makeText(Booking.this, lab, Toast.LENGTH_SHORT).show();
 
-                            volleypost(1, Integer.parseInt(lab), year_split+"-"+date_ymd[1]+"-"+date_ymd[2], "test", 1);
+                            volleypost(1, Integer.parseInt(lab), year_split+"-"+date_ymd[1]+"-"+date_ymd[2], "test123", Integer.parseInt(each_button.getTag(R.id.kalender_tag).toString()));
                         }
                     });
                 }else if (i==0){
@@ -267,6 +267,9 @@ public class Booking extends AppCompatActivity {
             public void onResponse(String s) {
 
                 Log.i("aa", "post请求成功" + s);
+//                initTableByAppointment(s);
+                Intent intent=new Intent(Booking
+                        .this, ChooseLab.class); startActivity(intent);
                 Toast.makeText(Booking.this, "000000000000000000"+s, Toast.LENGTH_LONG).show();
             }
         }, new Response.ErrorListener() {
